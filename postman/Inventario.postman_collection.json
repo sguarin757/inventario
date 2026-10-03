@@ -1,0 +1,246 @@
+{
+  "info": {
+    "name": "Inventario - Spring Boot",
+    "description": "Pruebas de la API de inventario. Ejecutar las peticiones en orden, con la base de datos vacía, para que los ids coincidan.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    { "key": "baseUrl", "value": "http://localhost:8080" }
+  ],
+  "item": [
+    {
+      "name": "Productos",
+      "item": [
+        {
+          "name": "01 Crear producto (201)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Teclado\",\n  \"descripcion\": \"Teclado mecánico\",\n  \"precio\": 120000,\n  \"stock\": 10\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "02 Crear segundo producto (201)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Mouse\",\n  \"descripcion\": \"Mouse inalámbrico\",\n  \"precio\": 45000,\n  \"stock\": 0\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "03 Crear producto duplicado (409)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"Teclado\",\n  \"descripcion\": \"Repetido\",\n  \"precio\": 100000,\n  \"stock\": 5\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "04 Crear producto inválido (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"nombre\": \"\",\n  \"precio\": -1,\n  \"stock\": -5\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "05 Listar productos (200)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/productos"
+          }
+        },
+        {
+          "name": "06 Obtener producto por id (200)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/productos/1"
+          }
+        },
+        {
+          "name": "07 Obtener producto inexistente (404)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/productos/999"
+          }
+        },
+        {
+          "name": "08 Actualizar producto (200)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/productos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 1,\n  \"nombre\": \"Teclado\",\n  \"descripcion\": \"Teclado mecánico RGB\",\n  \"precio\": 135000,\n  \"stock\": 10\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "Movimientos",
+      "item": [
+        {
+          "name": "09 Entrada de 20 unidades (201, stock pasa a 30)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/movimientos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"producto\": { \"id\": 1 },\n  \"cantidad\": 20,\n  \"tipo\": \"ENTRADA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "10 Salida de 5 unidades (201, stock pasa a 25)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/movimientos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"producto\": { \"id\": 1 },\n  \"cantidad\": 5,\n  \"tipo\": \"SALIDA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "11 Salida sin stock suficiente (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/movimientos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"producto\": { \"id\": 2 },\n  \"cantidad\": 3,\n  \"tipo\": \"SALIDA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "12 Movimiento con cantidad 0 (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/movimientos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"producto\": { \"id\": 1 },\n  \"cantidad\": 0,\n  \"tipo\": \"ENTRADA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "13 Movimiento con tipo inválido (400)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/movimientos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"producto\": { \"id\": 1 },\n  \"cantidad\": 2,\n  \"tipo\": \"DEVOLUCION\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "14 Movimiento con producto inexistente (404)",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/movimientos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"producto\": { \"id\": 999 },\n  \"cantidad\": 2,\n  \"tipo\": \"ENTRADA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "15 Listar movimientos (200)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/movimientos"
+          }
+        },
+        {
+          "name": "16 Obtener movimiento por id (200)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/movimientos/1"
+          }
+        },
+        {
+          "name": "17 Obtener movimiento inexistente (404)",
+          "request": {
+            "method": "GET",
+            "url": "{{baseUrl}}/api/movimientos/999"
+          }
+        },
+        {
+          "name": "18 Actualizar movimiento 2: salida de 8 (200, stock pasa a 22)",
+          "request": {
+            "method": "PUT",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "url": "{{baseUrl}}/api/movimientos",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"id\": 2,\n  \"producto\": { \"id\": 1 },\n  \"cantidad\": 8,\n  \"tipo\": \"SALIDA\"\n}",
+              "options": { "raw": { "language": "json" } }
+            }
+          }
+        },
+        {
+          "name": "19 Eliminar movimiento 2 (204, stock vuelve a 30)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/movimientos/2"
+          }
+        }
+      ]
+    },
+    {
+      "name": "Eliminar productos",
+      "item": [
+        {
+          "name": "20 Eliminar producto con movimientos (400)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/productos/1"
+          }
+        },
+        {
+          "name": "21 Eliminar producto sin movimientos (204)",
+          "request": {
+            "method": "DELETE",
+            "url": "{{baseUrl}}/api/productos/2"
+          }
+        }
+      ]
+    }
+  ]
+}
